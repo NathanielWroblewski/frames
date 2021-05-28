@@ -10,7 +10,7 @@ import { seed, noise } from './utilities/noise.js'
 import { range, stableSort, remap, grid, cube } from './utilities/index.js'
 import { COLOR } from './constants/colors.js'
 import {
-  ZOOM, Δt, TICK_ROLLOVER, TENTH_TICK_ROLLOVER, HALF_TICK_ROLLOVER, DELAY,
+  ZOOM, Δt, TICK_ROLLOVER, TENTH_TICK_ROLLOVER, HALF_TICK_ROLLOVER, DELAY, FPS,
   FREQUENCY, AMPLITUDE, SCALE, X_AXIS, Y_AXIS, ORIGIN, QUEUE_SIZE, TIME_ROLLOVER
 } from './constants/dimensions.js'
 
@@ -73,7 +73,7 @@ const getOpacity = tick => {
   return 1 - ((tick - second)/TENTH_TICK_ROLLOVER)
 }
 
-const step = () => {
+const render = () => {
   const θf = noise(θ * FREQUENCY, t * FREQUENCY, 1) * AMPLITUDE
   const Δθ = θf - θ
   θ = θf
@@ -106,10 +106,18 @@ const step = () => {
   t += Δt
 
   if (t === TIME_ROLLOVER) t = 0
+}
 
+let prevTick = 0
+
+const step = () => {
   window.requestAnimationFrame(step)
+
+  const now = Math.round(FPS * Date.now() / 1000)
+  if (now === prevTick) return
+  prevTick = now
+
+  render()
 }
 
 step()
-
-
