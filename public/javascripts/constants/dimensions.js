@@ -27,3 +27,5 @@ export const ORIGIN = [0, 0, 0]
 export const QUEUE_SIZE = 14
 
 export const TIME_ROLLOVER = 1000000
+
+export const FPS = 60
